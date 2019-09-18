@@ -13,7 +13,6 @@ class PrettyWidget(QWidget):
 
     def __init__(self):
 
-
         super(PrettyWidget, self).__init__()
         font = QFont()
         font.setPointSize(16)
@@ -41,7 +40,7 @@ class PrettyWidget(QWidget):
 
         # Plot network
         node_pos = {node[0]: (node[1]['X'], -node[1]['Y']) for node in g.nodes(data=True)}
-        edge_col = [e[2]['color'] for e in g.edges(data=True)]
+        edge_col = [e[2]['attr_dict']['color'] for e in g.edges(data=True)]
         nx.draw_networkx(g, pos=node_pos, arrows=True, edge_color=edge_col, node_size=2200, alpha=.85, node_color='c',
                          with_labels=True)
         labels = nx.get_edge_attributes(g, 'num_connections')
@@ -340,7 +339,7 @@ def makeNetwork():
     nodeFrame = pd.DataFrame(data=nodeList)
     # add node properties
     for i, nlrow in nodeFrame.iterrows():
-        g.node[nlrow[0]] = nlrow[1:].to_dict()
+        g.node[nlrow[0]].update(nlrow[1:].to_dict())
 
     return g
 
